@@ -1,0 +1,9 @@
+/target
+/targetc
+/targetz
+/outputs
+zig-cache/
+Cargo.lock
+*.csv
+*.png
+.DS_Store
