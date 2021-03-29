@@ -42,10 +42,10 @@ The demos assume [GCC](https://gcc.gnu.org/) is available on your system. On Mac
 All demos run the same [Kalman filter](https://en.wikipedia.org/wiki/Kalman_filter) model. The model is linear, scalar, and does not include control inputs (*e.g.*, a `B * u` term). The same terse variable names are used in all language demos and reflect the general mathematical components of the Kalman Filter:
 
 - `x`: State variable (in this case, just a scalar).
-- `P`: *A posteriori* estimate of covariance.
+- `P`: *A posteriori* estimate of variance.
 - `A`: The state transition/physics forward model.
 - `H`: The observation model.
-- `Q`: Covariance for the process noise.
-- `R`: Covariance for the observation noise.
+- `Q`: Variance for the process noise.
+- `R`: Variance for the observation noise.
 
 The Kalman filter is implemented with a stateful `struct` in each language and a two-step process to evaluate the output of the filter given a new observation. This common split -- first `predict` and then `update` -- is reflected in two separate functions.
