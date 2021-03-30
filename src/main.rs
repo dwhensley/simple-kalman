@@ -26,19 +26,11 @@ struct ScalarKalman {
     R: Float,
 }
 
-#[allow(non_snake_case)]
 impl ScalarKalman {
-    fn new(
-        A: Float,
-        H: Float,
-        Q: Float,
-        R: Float,
-        x0: Option<Float>,
-        P0: Option<Float>,
-    ) -> KalmanResult<Self> {
+    fn new(A: Float, H: Float, Q: Float, R: Float, x0: Option<Float>, P0: Option<Float>) -> Self {
         let x = if let Some(x0) = x0 { x0 } else { 0.0 };
         let P = if let Some(P0) = P0 { P0 } else { 0.0 };
-        Ok(Self { x, P, A, H, Q, R })
+        Self { x, P, A, H, Q, R }
     }
 
     fn predict(&mut self) {
@@ -60,7 +52,7 @@ impl ScalarKalman {
         self.P *= 1.0 - K * self.H;
         Ok(())
     }
-    
+
     fn advance(&mut self, z: Float) -> KalmanResult<Float> {
         self.predict();
         self.update(z)?;
@@ -74,7 +66,9 @@ fn main() -> Result<()> {
 
     let delt = 0.1;
     let mut t: [Float; NUM_ITER] = [0.0; NUM_ITER];
-    t.iter_mut().zip(0..100).for_each(|(t, n)| *t = delt * n as Float);
+    t.iter_mut()
+        .zip(0..100)
+        .for_each(|(t, n)| *t = delt * n as Float);
     let f = 0.1;
     let w = 2.0 * PI * f;
     let phase = 0.0;
@@ -82,30 +76,30 @@ fn main() -> Result<()> {
     let dc_offset = 0.2294;
 
     let mut x_truth: [Float; NUM_ITER] = [0.0; NUM_ITER];
-    x_truth.iter_mut().zip(t.iter()).for_each(|(x, &t)| {
+    for (x, &t) in x_truth.iter_mut().zip(t.iter()) {
         *x = magnitude * (w * t - phase).sin() + dc_offset;
-    });
+    }
 
     let normal_dist = Normal::new(0.0, process_noise_std)?;
     let mut z_obs: [Float; NUM_ITER] = [0.0; NUM_ITER];
-    z_obs.iter_mut().zip(x_truth.iter()).for_each(|(z, &x)| {
+    for (z, &x) in z_obs.iter_mut().zip(x_truth.iter()) {
         *z = x + normal_dist.sample(&mut thread_rng());
-    });
+    }
 
     let A = 1.0;
     let H = 1.0;
     let Q = 1e-4;
 
     let x0 = x_truth[0];
-    let mut kalman_filter = ScalarKalman::new(A, H, Q, R, Some(x0), None)?;
+    let mut kalman_filter = ScalarKalman::new(A, H, Q, R, Some(x0), None);
 
     let mut output: [Float; NUM_ITER] = [0.0; NUM_ITER];
     for (out, &z) in output.iter_mut().zip(z_obs.iter()) {
         *out = kalman_filter.advance(z)?;
     }
 
-    for (idx, (&z, &out)) in z_obs.iter().zip(output.iter()).enumerate() {
-        print!("{},", x_truth[idx]);
+    for (&x, (&z, &out)) in x_truth.iter().zip(z_obs.iter().zip(output.iter())) {
+        print!("{},", x);
         print!("{},", z);
         println!("{}", out);
     }
