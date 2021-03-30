@@ -39,12 +39,14 @@ def main():
     truth = np.array(truth)
     inputs = np.array(inputs)
     outputs = np.array(outputs)
+    time = np.linspace(0.0, 10.0, len(inputs))
 
-    plt.plot(inputs, 'ob', alpha=0.25)
-    plt.plot(outputs, 'r')
-    plt.plot(truth, '--g')
+    plt.plot(time, inputs, 'ob', alpha=0.25)
+    plt.plot(time, outputs, 'r')
+    plt.plot(time, truth, '--g')
 
     plt.title(f"{lang} Scalar Kalman Filter Example")
+    plt.xlabel("Time [s]")
     plt.legend(["input", "kalman filter output", "truth"])
 
     plt.show()
