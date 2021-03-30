@@ -8,7 +8,7 @@ const KalmanError = error {
     FailedScalarInverse,
 };
 
-const KalmanNoControlScalar = struct {
+const ScalarKalman = struct {
     x: Float,
     P: Float,
     A: Float,
@@ -23,10 +23,10 @@ const KalmanNoControlScalar = struct {
         R: Float,
         x0: ?Float,
         P0: ?Float
-    ) KalmanNoControlScalar {
+    ) ScalarKalman {
         const x = x0 orelse 0.0;
         const P = P0 orelse 0.0;
-        return KalmanNoControlScalar {
+        return ScalarKalman {
             .x = x,
             .P = P,
             .A = A,
@@ -36,12 +36,12 @@ const KalmanNoControlScalar = struct {
         };
     }
 
-    fn predict(self: *KalmanNoControlScalar) void {
+    fn predict(self: *ScalarKalman) void {
         self.x *= self.A;
         self.P = self.A * self.P * self.A + self.Q;
     }
 
-    fn update(self: *KalmanNoControlScalar, z: Float) KalmanError!void {
+    fn update(self: *ScalarKalman, z: Float) KalmanError!void {
         const y = z - self.H * self.x;
         const S = self.H * self.P * self.H + self.R;
         if (std.math.absFloat(S) < 1e-8) {
@@ -53,7 +53,7 @@ const KalmanNoControlScalar = struct {
         self.P *= 1.0 - K * self.H;
     }
 
-    fn advance(self: *KalmanNoControlScalar, z: Float) KalmanError!Float {
+    fn advance(self: *ScalarKalman, z: Float) KalmanError!Float {
         self.predict();
         try self.update(z);
         return self.x;
@@ -96,7 +96,7 @@ pub fn main() anyerror!void {
     const R: Float = 0.05 * 0.05;
     const x0 = z_obs[0];
 
-    var kalman_filter = KalmanNoControlScalar.init(A, H, Q, R, x0, null);
+    var kalman_filter = ScalarKalman.init(A, H, Q, R, x0, null);
 
     var output: [num_iter]Float = undefined;
     for (output) |*o, idx| {
