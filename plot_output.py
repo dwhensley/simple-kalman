@@ -18,8 +18,11 @@ def main():
     elif lang_selector == 2:
         filename = "out_c.csv"
         lang = "C"
+    elif lang_selector == 3:
+        filename = "out_py.csv"
+        lang = "Python"
     else:
-        raise ValueError("Did not understand selector, must be one of {{0, 1, 2}}")
+        raise ValueError("Did not understand selector, must be one of {{0, 1, 2, 3}}")
 
     with open(os.path.join("outputs", filename)) as f:
         rdr = csv.reader(f)
