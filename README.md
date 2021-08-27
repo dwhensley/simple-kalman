@@ -1,14 +1,15 @@
 # Simple Kalman
 
-This repo demos a simple scalar Kalman filter (linear quadratic estimator) in three languages:
+This repo demos a simple scalar Kalman filter (linear quadratic estimator) in four languages:
 
 1. [Rust](https://www.rust-lang.org/)
 2. [Zig](https://ziglang.org/)
 3. Venerable [C](https://en.wikipedia.org/wiki/C_(programming_language))
+4. [Python](https://www.python.org/)
 
-The filter is implemented in a single `main` file for each language using a very similar style, but they are not all exactly the same. For example, the Rust program adds noise by drawing from a normal distribution while the Zig and C programs draw additive noise points evenly from a linear range.
+The filter is implemented in a single `main` file for each language using a very similar style, but they are not all exactly the same. For example, the Rust and Python programs add noise by drawing from a normal distribution while the Zig and C programs draw additive noise points evenly from a linear range.
 
-The programs are simple so comparisons across the languages is limited. But this gives a small flavor and working example code across all three for those interested in taking a look at Rust and/or Zig.
+The programs are simple so comparisons across the languages is limited. But this gives a small flavor and working example code across all four for those interested in taking a look at Rust and/or Zig.
 
 ## Running the Demos
 
@@ -20,10 +21,11 @@ With the compilers installed, you can:
 2. Run the Rust demo via `run_rust.sh`.
 3. Run the Zig demo via `run_zig.sh`.
 4. Run the C demo via `run_c.sh`.
+5. Run the Python demo via `run_py.sh`.
 
 ## The Source code
 
-The source code is in `src` where there is a `main` file for each of the 3 languages.
+The source code is in `src` where there is a `main` file for each of the 4 languages.
 
 ### Compiling Rust
 
